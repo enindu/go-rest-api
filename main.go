@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"gorm.io/gorm"
 )
@@ -25,12 +27,17 @@ type Account struct {
 }
 
 func main() {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8000"
+	}
+
 	http.HandleFunc("/", baseHandler)
 	http.HandleFunc("/api/login", loginHandler)
 	http.HandleFunc("/api/register", registerHandler)
 	http.HandleFunc("/api/forgot-password", forgotPasswordHandler)
 
-	log.Println("Server listens to port 8000")
+	log.Println(fmt.Sprintf("Server listens to port %s", port))
 
-	http.ListenAndServe(":8000", nil)
+	http.ListenAndServe(fmt.Sprintf(":%s", port), nil)
 }
