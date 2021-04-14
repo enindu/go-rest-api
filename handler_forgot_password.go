@@ -57,7 +57,7 @@ func forgotPasswordHandler(response http.ResponseWriter, request *http.Request) 
 	}
 
 	token := xid.New().String()
-	mail := smtp.PlainAuth("PLAIN", "f204e4687aa3cb", "3f23587357e4e7", "smtp.mailtrap.io")
+	mail := smtp.PlainAuth("PLAIN", "", "", "")
 	from := "noreply@example.com"
 	to := forgotPasswordRequest.Email
 	subject := "Password Reset"
@@ -65,7 +65,7 @@ func forgotPasswordHandler(response http.ResponseWriter, request *http.Request) 
 		"To: " + to + "\n" +
 		"Subject: " + subject + "\n\n" +
 		"https://www.example.com/password-reset?username=" + account.Username + "&token=" + token)
-	if smtp.SendMail("smtp.mailtrap.io:2525", mail, from, []string{to}, message) != nil {
+	if smtp.SendMail(":2525", mail, from, []string{to}, message) != nil {
 		response.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(response).Encode(&Response{
 			StatusCode: http.StatusInternalServerError,
